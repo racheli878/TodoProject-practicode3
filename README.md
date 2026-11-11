@@ -26,8 +26,7 @@ The application allows users to register, log in, and manage tasks through a sim
 
 ```text
 TodoProject/
-├── backend/
-│   └── TodoApi/
+├── Backend/
 ├── frontend/
 ├── database/
 │   └── schema.sql
@@ -81,37 +80,38 @@ Make sure you have installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/rivky9505/TodoProject.git
-cd TodoProject
+git clone https://github.com/racheli878/TodoProject-practicode3.git
+cd TodoProject-practicode3
 ```
 
 ### 2. Set Up the Database
 
 Create a MySQL database named `todo`.
 
-Create the required tables:
-
-- `Items` – stores tasks
-- `Users` – stores user credentials
-
-If the repository includes `database/schema.sql`, run it to create the tables.
-
-Configure the database connection string in the backend configuration.
+Run `database/schema.sql` to create the required tables (`items` and `users`).
 
 ### 3. Configure the Backend
 
 Navigate to the backend project:
 
 ```bash
-cd backend/TodoApi
+cd Backend
 ```
 
-Configure the following settings locally:
+`appsettings.json` contains placeholders only. Put your real values in `Backend/appsettings.Development.json` (ignored by Git):
 
-- MySQL connection string
-- JWT signing key
-- JWT issuer: `TodoApi`
-- JWT audience: `TodoClient`
+```json
+{
+  "ConnectionStrings": {
+    "ToDoDB": "server=localhost;user=YOUR_USER;password=YOUR_PASSWORD;database=todo"
+  },
+  "Jwt": {
+    "Key": "A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS",
+    "Issuer": "TodoApi",
+    "Audience": "TodoClient"
+  }
+}
+```
 
 Do not commit database passwords or JWT signing keys to GitHub.
 
@@ -181,4 +181,4 @@ The application will open at:
 
 ## Author
 
-GitHub: [racheli878](https://github.com/racheli878/TodoProject-practicode3)
+GitHub: [racheli878](https://github.com/racheli878)
