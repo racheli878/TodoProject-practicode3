@@ -1,0 +1,21 @@
+# React
+node_modules/
+build/
+.env
+.env.*
+!.env.example
+
+# .NET
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets and local configuration
+**/appsettings.Development.json
+**/appsettings.Local.json
