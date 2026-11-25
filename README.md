@@ -159,6 +159,12 @@ The application will open at:
 
 `http://localhost:3000`
 
+### API URL
+
+The frontend reads the backend address from the `REACT_APP_API_URL` environment variable and falls back to `http://localhost:5216` when it is not set (see `frontend/.env.example`).
+
+When deploying the frontend (e.g. on Render), set `REACT_APP_API_URL` to the deployed backend URL. The variable is read at build time, so redeploy after changing it.
+
 ## Authentication Flow
 
 1. A user registers with a username and password.
