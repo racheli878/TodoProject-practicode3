@@ -39,6 +39,13 @@ async function getTodos() {
     await getTodos();//refresh tasks list
   }
 
+  function logout() {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setShowRegister(false);
+    setTodos([]);
+  }
+
   useEffect(() => {
     if (isLoggedIn)
       getTodos();
@@ -79,7 +86,13 @@ async function getTodos() {
     <div className="app-shell">
       <main className="card todo-card">
         <header className="todo-header">
-          <span className="eyebrow">{today}</span>
+          <div className="todo-topbar">
+            <span className="eyebrow">{today}</span>
+            <button type="button" className="signout-btn" onClick={logout}>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5H3.5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1H6M10.5 11l3-3-3-3M13.5 8H6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              Sign out
+            </button>
+          </div>
           <h1 className="brand">Todos<em>.</em></h1>
           <div className="todo-meta">
             <span><strong>{openCount}</strong> open · <strong>{completedCount}</strong> completed</span>

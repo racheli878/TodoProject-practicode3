@@ -178,6 +178,44 @@ button {
   margin-bottom: 36px;
 }
 
+.todo-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.signout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.signout-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.signout-btn:hover {
+  color: var(--gold-light);
+  border-color: rgba(201, 169, 106, 0.45);
+  background: rgba(201, 169, 106, 0.06);
+}
+
+.signout-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
 .brand {
   margin: 14px 0 6px;
   font-family: var(--serif);
