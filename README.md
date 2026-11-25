@@ -165,6 +165,20 @@ The frontend reads the backend address from the `REACT_APP_API_URL` environment 
 
 When deploying the frontend (e.g. on Render), set `REACT_APP_API_URL` to the deployed backend URL. The variable is read at build time, so redeploy after changing it.
 
+### Running the Backend with Docker
+
+The backend includes a `Dockerfile` (in `Backend/`). Build and run it:
+
+```bash
+cd Backend
+docker build -t todoapi .
+docker run -p 8080:8080 -e ConnectionStrings__ToDoDB="server=HOST;user=USER;password=PASSWORD;database=todo" -e Jwt__Key="A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS" -e Jwt__Issuer=TodoApi -e Jwt__Audience=TodoClient todoapi
+```
+
+The API listens on the port given in the `PORT` environment variable, or `8080` if it is not set. Configuration is passed as environment variables (`__` replaces `:` in setting names). `appsettings.Development.json` is excluded from the image.
+
+To deploy on Render, create a **Web Service** with **Docker** as the runtime, set the root directory to `Backend`, and add the environment variables above. The MySQL database must be hosted separately, since Render does not offer managed MySQL.
+
 ## Authentication Flow
 
 1. A user registers with a username and password.

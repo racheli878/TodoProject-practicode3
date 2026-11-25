@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+.vscode/
+Properties/
+*.user
+
+# Local secrets must never be baked into the image
+appsettings.Development.json
+appsettings.Local.json
+
+Dockerfile
+.dockerignore
