@@ -71,29 +71,18 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => Results.Redirect("/items")).RequireAuthorization();
 
-// The id of the logged-in user, taken from the "sub" claim of the JWT
-static int GetUserId(ClaimsPrincipal user) =>
-    int.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier) ?? user.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+app.MapGet("/items", async (ToDoDbContext db) => await db.Items.ToListAsync()).RequireAuthorization();
 
-app.MapGet("/items", async (ToDoDbContext db, ClaimsPrincipal user) =>
+app.MapPost("/items", async (ToDoDbContext db, Item item) =>
 {
-    int userId = GetUserId(user);
-    return await db.Items.Where(i => i.UserId == userId).ToListAsync();
-}).RequireAuthorization();
-
-app.MapPost("/items", async (ToDoDbContext db, Item item, ClaimsPrincipal user) =>
-{
-    item.Id = 0;
-    item.UserId = GetUserId(user);
     db.Items.Add(item);
     await db.SaveChangesAsync();
     return Results.Created($"/items/{item.Id}", item);
 }).RequireAuthorization();
 
-app.MapPut("/items/{id}", async (ToDoDbContext db, int id, bool IsComplete, ClaimsPrincipal user) =>
+app.MapPut("/items/{id}", async (ToDoDbContext db, int id, bool IsComplete) =>
 {
-    int userId = GetUserId(user);
-    Item? toCahnge = await db.Items.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+    Item? toCahnge = await db.Items.FindAsync(id);
     if (toCahnge == null)
         return Results.NotFound();
     toCahnge.IsComplete = IsComplete;
@@ -101,10 +90,9 @@ app.MapPut("/items/{id}", async (ToDoDbContext db, int id, bool IsComplete, Clai
     return Results.Ok(toCahnge);
 }).RequireAuthorization();
 
-app.MapDelete("/items/{id}", async (ToDoDbContext db, int id, ClaimsPrincipal user) =>
+app.MapDelete("/items/{id}", async (ToDoDbContext db, int id) =>
 {
-    int userId = GetUserId(user);
-    Item? item = await db.Items.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+    Item? item = await db.Items.FindAsync(id);
     if (item == null)
         return Results.NotFound();
     db.Items.Remove(item);

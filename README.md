@@ -40,9 +40,8 @@ TodoProject/
 - Secure password hashing
 - User login with JWT authentication
 - Protected API endpoints
-- Personal task list for each user
 - Create new tasks
-- View your tasks
+- View all tasks
 - Mark tasks as completed or incomplete
 - Delete tasks
 - Automatic redirect to the login screen when authentication fails
@@ -58,11 +57,11 @@ TodoProject/
 
 ### Tasks
 
-All task endpoints require JWT authentication. Each user only sees and changes their own tasks; the user is identified by the `sub` claim of the token.
+All task endpoints require JWT authentication.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/items` | Get the current user's tasks |
+| GET | `/items` | Get all tasks |
 | POST | `/items` | Create a task |
 | PUT | `/items/{id}?isComplete=true` | Update task completion status |
 | DELETE | `/items/{id}` | Delete a task |
@@ -90,8 +89,6 @@ cd TodoProject-practicode3
 Create a MySQL database named `todo`.
 
 Run `database/schema.sql` to create the required tables (`items` and `users`).
-
-If your database was created from an older version of `schema.sql` (before tasks were linked to users), run `database/migrations/001_add_user_to_items.sql` once instead. Tasks created before the migration have no owner and will not appear for any user.
 
 ### 3. Configure the Backend
 
@@ -200,7 +197,7 @@ To deploy on Render, create a **Web Service** with **Docker** as the runtime, se
 - JWT signatures and expiration times are validated by the backend.
 - Sensitive configuration values should remain outside version control.
 
-- Each task belongs to a user, and the API only returns or changes the logged-in user's tasks.
+**Note:** This is an educational project. Tasks are not currently separated by user account.
 
 ## Author
 
