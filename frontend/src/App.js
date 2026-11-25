@@ -22,7 +22,9 @@ async function getTodos() {
 
   async function createTodo(e) {
     e.preventDefault();
-    await service.addTask(newTodo);
+    if (!newTodo.trim())
+      return;
+    await service.addTask(newTodo.trim());
     setNewTodo("");//clear input
     await getTodos();//refresh tasks list (in order to see the new one)
   }
@@ -35,6 +37,13 @@ async function getTodos() {
   async function deleteTodo(id) {
     await service.deleteTask(id);
     await getTodos();//refresh tasks list
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setShowRegister(false);
+    setTodos([]);
   }
 
   useEffect(() => {
@@ -52,35 +61,76 @@ async function getTodos() {
   return () => {window.removeEventListener("unauthorized", handleUnauthorized);};
 }, []);
 
+  const footer = (
+    <footer className="app-footer">
+      React<span>·</span>ASP.NET Core<span>·</span>MySQL
+    </footer>
+  );
+
   if (!isLoggedIn) {
-    return showRegister ? (<Register onRegister={() => setShowRegister(false)} onBack={() => setShowRegister(false)} />) :
-      (<Login onLogin={() => setIsLoggedIn(true)} onRegister={() => setShowRegister(true)} />);
+    return (
+      <div className="app-shell">
+        {showRegister ? (<Register onRegister={() => setShowRegister(false)} onBack={() => setShowRegister(false)} />) :
+          (<Login onLogin={() => setIsLoggedIn(true)} onRegister={() => setShowRegister(true)} />)}
+        {footer}
+      </div>
+    );
   }
 
+  const completedCount = todos.filter(todo => todo.isComplete).length;
+  const openCount = todos.length - completedCount;
+  const progress = todos.length ? Math.round(completedCount / todos.length * 100) : 0;
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
   return (
-    <section className="todoapp">
-      <header className="header">
-        <h1>todos</h1>
-        <form onSubmit={createTodo}>
-          <input className="new-todo" placeholder="Well, let's take on the day" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
+    <div className="app-shell">
+      <main className="card todo-card">
+        <header className="todo-header">
+          <div className="todo-topbar">
+            <span className="eyebrow">{today}</span>
+            <button type="button" className="signout-btn" onClick={logout}>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5H3.5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1H6M10.5 11l3-3-3-3M13.5 8H6" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              Sign out
+            </button>
+          </div>
+          <h1 className="brand">Todos<em>.</em></h1>
+          <div className="todo-meta">
+            <span><strong>{openCount}</strong> open · <strong>{completedCount}</strong> completed</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="progress"><span style={{ width: `${progress}%` }} /></div>
+        </header>
+
+        <form className="new-todo-form" onSubmit={createTodo}>
+          <input className="new-todo" placeholder="What deserves your attention today?" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
+          <button type="submit" className="add-btn" aria-label="Add task" disabled={!newTodo.trim()}>
+            <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M9 3v12M3 9h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+          </button>
         </form>
-      </header>
-      <section className="main" style={{ display: "block" }}>
-        <ul className="todo-list">
-          {todos.map(todo => {
-            return (
-              <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
-                <div className="view">
-                  <input className="toggle" type="checkbox" defaultChecked={todo.isComplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
-                  <label>{todo.name}</label>
-                  <button className="destroy" onClick={() => deleteTodo(todo.id)}></button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    </section >
+
+        {todos.length === 0 ? (
+          <div className="empty-state">
+            <p>A clear horizon.</p>
+            <span>Add your first task above.</span>
+          </div>
+        ) : (
+          <ul className="todo-list">
+            {todos.map(todo => {
+              return (
+                <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
+                  <input className="toggle" type="checkbox" id={`todo-${todo.id}`} defaultChecked={todo.isComplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
+                  <label htmlFor={`todo-${todo.id}`}>{todo.name}</label>
+                  <button className="destroy" aria-label="Delete task" onClick={() => deleteTodo(todo.id)}>
+                    <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </main>
+      {footer}
+    </div>
   );
 }
 

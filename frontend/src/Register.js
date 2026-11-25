@@ -23,11 +23,13 @@ export default function Register({ onRegister, onBack }) {
     }
 
     return (
-        <form className="auth-form" onSubmit={handleSubmit}>
-            <h2>Register</h2>
+        <form className="card auth-form" onSubmit={handleSubmit}>
+            <span className="eyebrow">Todos</span>
+            <h2>Create account</h2>
+            <p className="auth-subtitle">A calmer way to manage your day.</p>
             <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
             <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-            <button type="submit">Register</button>
+            <button type="submit">Create account</button>
             <button type="button" onClick={onBack}>Back to Login</button>
             {error && <p className="auth-error">{error}</p>}
         </form>

@@ -21,11 +21,13 @@ export default function Login({ onLogin, onRegister }) {
   }
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
-      <h2>Login</h2>
+    <form className="card auth-form" onSubmit={handleSubmit}>
+      <span className="eyebrow">Todos</span>
+      <h2>Welcome back</h2>
+      <p className="auth-subtitle">Sign in to continue to your tasks.</p>
       <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
       <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-      <button type="submit">Login</button>
+      <button type="submit">Sign in</button>
       <button type="button" onClick={onRegister}>Create an account</button>
       {error && <p className="auth-error">{error}</p>}
     </form>
