@@ -26,7 +26,9 @@ CREATE TABLE `items` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) DEFAULT NULL,
   `IsComplete` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  `UserId` int DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_items_UserId` (`UserId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -45,6 +47,13 @@ CREATE TABLE `users` (
   UNIQUE KEY `UserName` (`UserName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Each task belongs to a user; deleting a user deletes their tasks
+--
+
+ALTER TABLE `items`
+  ADD CONSTRAINT `FK_items_users_UserId` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`) ON DELETE CASCADE;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
