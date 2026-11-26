@@ -6,10 +6,12 @@ export default function Register({ onRegister, onBack }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     async function handleSubmit(e) {
         e.preventDefault();
         setError('');
+        setSubmitting(true);
         try {
             await service.register(username, password);
             onRegister();
@@ -20,6 +22,9 @@ export default function Register({ onRegister, onBack }) {
             else
                 setError('ההרשמה נכשלה');
         }
+        finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -29,7 +34,7 @@ export default function Register({ onRegister, onBack }) {
             <p className="auth-subtitle">A calmer way to manage your day.</p>
             <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
             <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-            <button type="submit">Create account</button>
+            <button type="submit" disabled={submitting}>Create account</button>
             <button type="button" onClick={onBack}>Back to Login</button>
             {error && <p className="auth-error">{error}</p>}
         </form>
